@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Earthquake Prediction Result</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: rgba(34, 40, 49, 0.95);
+            padding: 32px 28px;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        h2, h3 {
+            color: #f8d90f;
+            margin-top: 0;
+        }
+        p, span, strong {
+            font-size: 1.08em;
+        }
+        .risk-high {
+            color: #ff4c4c;
+            font-weight: bold;
+            text-shadow: 0 0 6px #ff4c4c55;
+        }
+        .risk-medium {
+            color: #ffb347;
+            font-weight: bold;
+            text-shadow: 0 0 6px #ffb34755;
+        }
+        .risk-low {
+            color: #4cff8f;
+            font-weight: bold;
+            text-shadow: 0 0 6px #4cff8f55;
+        }
+        iframe {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+            margin-top: 10px;
+        }
+        .back-btn {
+            margin-top: 24px;
+            padding: 10px 28px;
+            background: linear-gradient(90deg, #232526 0%, #414345 100%);
+            color: #f8d90f;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: background 0.2s, color 0.2s;
+            outline: none;
+            display: inline-block;
+        }
+        .back-btn:hover, .back-btn:focus {
+            background: #f8d90f;
+            color: #232526;
+        }
+        @media (max-width: 700px) {
+            .container {
+                padding: 18px 8px;
+            }
+            iframe {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>🌍 Earthquake Risk Prediction</h2>
+    <p><strong>Latitude:</strong> {{ lat }}</p>
+    <p><strong>Longitude:</strong> {{ lon }}</p>
+    <p><strong>Risk Level:</strong> 
+        <span class="risk-{{ risk_level.lower() }}">{{ risk_level }}</span>
+    </p>
+    
+    <h3>🗺 Map Visualization</h3>
+    <iframe src="{{ url_for('static', filename=map_url) }}" width="100%" height="500px"></iframe>
+
+    {% if whatsapp_status %}
+        <p><strong>WhatsApp Alert Status:</strong> {{ whatsapp_status }}</p>
+    {% endif %}
+
+    <button class="back-btn" onclick="window.history.back()">
+        ⬅ Go Back
+    </button>
+</div>
+
+{% if whatsapp_status %}
+<script>
+    setTimeout(() => {
+        alert("This alert page will now close. Please check WhatsApp Web.");
+        window.open("https://web.whatsapp.com", "_blank");
+        window.close();
+    }, 10000);
+</script>
+{% endif %}
+
+</body>
+</html>
