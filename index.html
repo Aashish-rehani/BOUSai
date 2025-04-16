@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Earthquake Risk Assessment</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        .card {
+            background: rgba(34, 40, 49, 0.97);
+            border: none;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        .form-control, .form-control:focus {
+            background: #232526;
+            color: #f8d90f;
+            border: 1px solid #444;
+        }
+        .btn-danger {
+            background: linear-gradient(90deg, #ff4c4c 0%, #fd7e14 100%);
+            border: none;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: background 0.2s, color 0.2s;
+        }
+        .btn-danger:hover, .btn-danger:focus {
+            background: linear-gradient(90deg, #fd7e14 0%, #ff4c4c 100%);
+            color: #232526;
+        }
+        .history-table {
+            background: rgba(34, 40, 49, 0.97);
+            color: #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.25);
+            margin-top: 2rem;
+        }
+        .history-table th, .history-table td {
+            border-color: #444;
+        }
+        .history-table th {
+            background: #232526;
+            color: #f8d90f;
+        }
+        .history-table tr:nth-child(even) {
+            background: #2c2f34;
+        }
+        .history-table tr:hover {
+            background: #343a40;
+        }
+        @media (max-width: 600px) {
+            .card, .history-table {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4" style="color:#f8d90f;">Earthquake Risk Prediction</h1>
+        <form action="/predict" method="post" class="card p-4 mb-4">
+            <div class="form-group">
+                <label>Latitude:</label>
+                <input type="number" step="0.0001" class="form-control" name="latitude" required>
+            </div>
+            <div class="form-group">
+                <label>Longitude:</label>
+                <input type="number" step="0.0001" class="form-control" name="longitude" required>
+            </div>
+            <button type="submit" class="btn btn-danger btn-block">Check Risk</button>
+        </form>
+        <div class="history-table p-3">
+            <h4 class="mb-3" style="color:#f8d90f;">History</h4>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Latitude</th>
+                            <th scope="col">Longitude</th>
+                            <th scope="col">Risk Level</th>
+                            <th scope="col">Checked At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Default history entry -->
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>35.6528</td>
+                            <td>139.8394</td>
+                            <td><span class="badge badge-danger">High</span></td>
+                            <td>—</td>
+                        </tr>
+                        <!-- Jinja2 dynamic history entries -->
+                        {% if history and history|length > 0 %}
+                            {% for entry in history %}
+                            <tr>
+                                <th scope="row">{{ loop.index + 1 }}</th>
+                                <td>{{ entry.latitude }}</td>
+                                <td>{{ entry.longitude }}</td>
+                                <td>
+                                    {% if entry.risk_level == 'High' %}
+                                        <span class="badge badge-danger">High</span>
+                                    {% elif entry.risk_level == 'Medium' %}
+                                        <span class="badge badge-warning">Medium</span>
+                                    {% else %}
+                                        <span class="badge badge-success">Low</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ entry.checked_at }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <!-- No additional history -->
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
